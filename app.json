@@ -13,22 +13,23 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.baltazarmolteni.DAMTPFINAL"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./src/assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -38,9 +39,14 @@
     "experiments": {
       "typedRoutes": true
     },
-    "config":{
-      "googleMaps":{
+    "config": {
+      "googleMaps": {
         "apiKey": "AIzaSyCx9buOuNx-Fk8-jscIPcVcx315Vb8dIMc"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "64044a9a-df20-4531-a932-e0a96d4ce943"
       }
     }
   }
