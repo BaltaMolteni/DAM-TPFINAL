@@ -37,6 +37,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "config":{
+      "googleMaps":{
+        "apiKey": "AIzaSyCx9buOuNx-Fk8-jscIPcVcx315Vb8dIMc"
+      }
     }
   }
 }
