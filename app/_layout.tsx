@@ -10,8 +10,6 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
-        {/* No necesitas poner nada aquí, Expo Router agregará
-            automáticamente las pantallas de tus archivos en la carpeta "app" */}
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
