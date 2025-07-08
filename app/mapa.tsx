@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions, StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker,Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 import { mapStyle } from '../src/components/mapStyle';
+import { streetData } from '../src/data/coloresCalle';
 
 // Coordenadas de Plaza Moreno, La Plata (ubicación por defecto)
 const plazaMorenoLocation = {
@@ -62,15 +63,15 @@ export default function MapScreen() {
       </View>
     );
   }
-
+  // después esto puede ser un auto o un usuario y otro para el auto
+  // cuando guarda la ubicación del auto
   return (
     <View style={styles.container}>
       {userLocation && (
           <TouchableOpacity style={styles.locationButton} onPress={goToMyLocation}>
-            // después esto puede ser un auto o un usuario y otro para el auto
-            // cuando guarda la ubicación del auto
             <Text style={styles.buttonText}>📍</Text>
           </TouchableOpacity>
+
       )}
 
       <MapView
@@ -85,6 +86,14 @@ export default function MapScreen() {
         // por eso agregué el marker con la ubicación del mapRegion (que se actualiza porque es un
         // State)
       >
+       {streetData.map((street, index) => (
+                <Polyline
+                  key={index}
+                  coordinates={street.points}
+                  strokeColor={street.color}
+                  strokeWidth={street.width}
+                />
+              ))}
         <Marker
             coordinate={{ latitude: mapRegion.latitude, longitude: mapRegion.longitude }}
             title="Tu Ubicación"
