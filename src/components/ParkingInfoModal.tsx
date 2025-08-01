@@ -20,11 +20,9 @@ const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, z
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            {/* --- ¡CAMBIO AQUÍ! --- */}
             <FontAwesome name="close" size={24} color="#333" />
           </TouchableOpacity>
           
-          {/* --- ¡CAMBIO AQUÍ! --- */}
           <FontAwesome name="info-circle" size={32} color="#4A90E2" style={styles.icon} />
           
           <Text style={styles.modalTitle}>Horarios por Zona</Text>
@@ -38,7 +36,6 @@ const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, z
   );
 };
 
-// (Los estilos permanecen igual)
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
