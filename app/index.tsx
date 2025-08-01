@@ -2,11 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+// Importamos Polyline para dibujar las rutas con coordenadas
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import EstacionarButton from '../src/components/EstacionarButton';
 
-import { mapStyle } from '../src/components/mapStyle';
-import { streetData } from '../src/data/coloresCalle';
+import EstacionarButton from '../src/components/EstacionarButton';
+// Apuntamos al archivo correcto con las coordenadas
+import { zonaTribunales } from '../src/data/EstacionamientoMedido';
 
 const plazaMorenoLocation = {
   latitude: -34.92145,
@@ -14,6 +15,21 @@ const plazaMorenoLocation = {
   latitudeDelta: 0.01,
   longitudeDelta: 0.01,
 };
+
+interface Point {
+  latitude: number;
+  longitude: number;
+}
+
+interface Calle {
+  points: Point[];
+}
+
+interface Zona {
+  nombre: string;
+  color: string;
+  calles: Calle[];
+}
 
 export default function MapScreen() {
   const [mapRegion, setMapRegion] = useState<Region | null>(null);
@@ -63,27 +79,26 @@ export default function MapScreen() {
   };
 
   const estacionarVehiculo = async () => {
-  if (userLocation) {
-    const newLocation: Region = {
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
-    };
-    setCarLocation(newLocation);
-    try {
-      await AsyncStorage.setItem('carLocation', JSON.stringify(newLocation));
-      console.log('Ubicación del auto guardada');
-    } catch (error) {
-      console.log('Error guardando ubicación del auto:', error);
+    if (userLocation) {
+      const newLocation: Region = {
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      };
+      setCarLocation(newLocation);
+      try {
+        await AsyncStorage.setItem('carLocation', JSON.stringify(newLocation));
+        console.log('Ubicación del auto guardada');
+      } catch (error) {
+        console.log('Error guardando ubicación del auto:', error);
+      }
     }
-  }
-};
+  };
 
   const goToMyLocation = () => {
     if (userLocation) {
       mapRef.current?.animateToRegion(userLocation, 1000);
-
     }
   };
 
@@ -108,17 +123,17 @@ export default function MapScreen() {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
-        customMapStyle={mapStyle}
+        showsBuildings={false}
         region={mapRegion}
         mapType="standard"
         pitchEnabled={false}
       >
-        {streetData.map((street, index) => (
+        {zonaTribunales.calles.map((calle, i) => (
           <Polyline
-            key={index}
-            coordinates={street.points}
-            strokeColor={street.color}
-            strokeWidth={street.width}
+            key={`Trib-${i}`}
+            coordinates={calle.points}
+            strokeColor={zonaTribunales.color}
+            strokeWidth={4}
           />
         ))}
 
@@ -160,20 +175,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 60,
     left: 20,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 50,
-    zIndex: 1,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  estacionarButton: {
-    position: 'absolute',
-    top: 60,
-    right: 20,
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 50,
