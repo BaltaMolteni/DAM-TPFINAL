@@ -7,7 +7,8 @@ import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 import ParkingInfoModal from '../src/components/ParkingInfoModal';
-import { zonasDeEstacionamiento as initialZones, Zona } from '../src/data/EstacionamientoMedido';
+import { zonasDeEstacionamiento as initialZones, Zona, generarPoligonoCalle } from '../src/data/EstacionamientoMedido';
+
 
 // locación default si el usuario no da permisos de ubicación
 
@@ -36,25 +37,7 @@ export default function MapScreen() {
   }, []);
   
   // esto a modo de prueba genero un polígono para probar el modal
-  useEffect(() => {
-      if (userLocation) {
-          const size = 0.0001; 
-          const testZone: Zona = {
-              nombre: "Zona de Prueba",
-              color: 'rgba(0, 255, 0, 0.5)',
-              horarios: "Esto es solo una prueba. ¡El modal funciona!",
-              calles: [{
-                  points: [
-                      { latitude: userLocation.latitude - size, longitude: userLocation.longitude - size },
-                      { latitude: userLocation.latitude + size, longitude: userLocation.longitude - size },
-                      { latitude: userLocation.latitude + size, longitude: userLocation.longitude + size },
-                      { latitude: userLocation.latitude - size, longitude: userLocation.longitude + size },
-                  ]
-              }]
-          };
-          setZonas([...initialZones, testZone]);
-      }
-  }, [userLocation]);
+  
 
   // permisos de ubicación, utiliza expo-location
   const requestLocationPermission = async () => {
@@ -85,35 +68,37 @@ export default function MapScreen() {
 
   // funcion para guardar el auto en la ubicación del usuario, utiliza libreria point in polygon para comprobar si está en zona de estacionamiendo medido
   const estacionarVehiculo = async () => {
-      if (!userLocation) return;
+    if (!userLocation) return;
 
-      let detectedZone: Zona | null = null;
-      
-      const userPoint = [userLocation.longitude, userLocation.latitude];
-      // acá recorre las zonas para la comprobación 
-      for (const zona of zonas) {
-          for (const calle of zona.calles) {
-              const polygonPoints = calle.points.map(p => [p.longitude, p.latitude]);
+    let detectedZone: Zona | null = null;
+    const userPoint = [userLocation.longitude, userLocation.latitude];
 
-              if (inside(userPoint, polygonPoints)) {
-                  detectedZone = zona;
-                  break;
-              }
-          }
-          if (detectedZone) break;
-      }
+    // Recorro todas las zonas
+    for (const zona of zonas) {
+        for (const calle of zona.calles) {
+            const polygon = generarPoligonoCalle(calle).map(p => [p.longitude, p.latitude]); 
+            if (inside(userPoint, polygon)) {
+                detectedZone = zona;
+                break; // sale del for de calles
+            }
+        }
+        if (detectedZone) break; // sale del for de zonas si encontró
+    }
 
-      if (detectedZone) {
-          setModalInfo({ visible: true, zone: detectedZone });
-      }
-      // estaciona y guarda la ubi en carlocation del asyncstorage
-      setCarLocation(userLocation);
-      try {
-          await AsyncStorage.setItem('carLocation', JSON.stringify(userLocation));
-      } catch (error) {
-          console.log('Error guardando ubicación del auto:', error);
-      }
-  };
+    // Si estoy en alguna zona → muestro modal
+    if (detectedZone) {
+        setModalInfo({ visible: true, zone: detectedZone });
+    }
+
+    // Estaciona y guarda ubicación en AsyncStorage
+    setCarLocation(userLocation);
+    try {
+        await AsyncStorage.setItem('carLocation', JSON.stringify(userLocation));
+    } catch (error) {
+        console.log('Error guardando ubicación del auto:', error);
+    }
+};
+
 
   // para volver a mi ubicación con función de react native maps
   const goToMyLocation = () => {
@@ -151,16 +136,20 @@ export default function MapScreen() {
               mapType="standard"
               pitchEnabled={false}
           >
-              {zonas.map((zona) =>
-                  zona.calles.map((calle, i) => (
-                      <Polygon
-                          key={`${zona.nombre}-${i}`}
-                          coordinates={calle.points}
-                          fillColor={zona.color}
-                          strokeWidth={0}
-                      />
-                  ))
-              )}
+                {zonas.map((zona) =>
+                    zona.calles.map((calle, i) => {
+                        const coords = generarPoligonoCalle(calle);
+                        return (
+                        <Polygon
+                            key={`${zona.nombre}-${i}`}
+                            coordinates={coords}
+                            fillColor={zona.color}
+                            strokeWidth={0}
+                        />
+                        );
+                    })
+                    )}
+
               {userLocation && (
                   <Marker coordinate={userLocation} title="Tu Ubicación">
                       <FontAwesome name="circle" size={24} color="#4A90E2" />
