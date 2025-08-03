@@ -1,35 +1,58 @@
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native';
+
+interface ZonaInfo {
+  color: string;
+  label: string;
+  schedule: string;
+}
 
 interface ParkingInfoModalProps {
   visible: boolean;
   onClose: () => void;
-  zoneName: string;
-  schedule: string;
+  zonas: ZonaInfo[];
 }
 
-const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, zoneName, schedule }) => {
+const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, zonas }) => {
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.centeredView}>
+      <View style={styles.overlay}>
         <View style={styles.modalView}>
+
+          {/* Botón de Cerrar */}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <FontAwesome name="close" size={24} color="#333" />
           </TouchableOpacity>
-          
-          <FontAwesome name="info-circle" size={32} color="#4A90E2" style={styles.icon} />
-          
-          <Text style={styles.modalTitle}>Horarios por Zona</Text>
-          <Text style={styles.zoneName}>{zoneName}</Text>
-          <Text style={styles.modalText}>{schedule}</Text>
 
-          <Text style={styles.prohibitedText}>Zona Roja: PROHIBIDO ESTACIONAR</Text>
+          {/* Header con icono y título */}
+          <View style={styles.header}>
+            <FontAwesome name="info-circle" size={28} color="#4A90E2" style={{ marginRight: 8 }} />
+            <Text style={styles.modalTitle}>Horarios por Zona</Text>
+          </View>
+
+          <Text style={styles.subTitle}>(según color en el mapa)</Text>
+
+          {/* Lista de zonas */}
+          <FlatList
+            data={zonas}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.zoneRow}>
+                <View style={[styles.colorDot, { backgroundColor: item.color }]} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.zoneLabel}>{item.label}:</Text>
+                  <Text style={styles.zoneSchedule}>{item.schedule}</Text>
+                </View>
+              </View>
+            )}
+          />
+
         </View>
       </View>
     </Modal>
@@ -37,66 +60,66 @@ const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, z
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
+  overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
-    margin: 20,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: '60%',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '85%',
-  },
-  icon: {
-    marginBottom: 15,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  zoneName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4A90E2',
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 24,
-  },
-  prohibitedText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#D0021B',
-    textAlign: 'center',
-    marginTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    paddingTop: 15,
   },
   closeButton: {
     position: 'absolute',
     top: 10,
-    right: 10,
-    padding: 5,
+    right: 15,
+    zIndex: 2,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+    marginTop: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  subTitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 15,
+    marginLeft: 4,
+  },
+  zoneRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  colorDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    marginRight: 10,
+    marginTop: 3,
+  },
+  zoneLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  zoneSchedule: {
+    fontSize: 15,
+    color: '#555',
   },
 });
-
 
 export default ParkingInfoModal;

@@ -3,14 +3,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import inside from 'point-in-polygon';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View, StatusBar } from 'react-native';
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 import ParkingInfoModal from '../src/components/ParkingInfoModal';
+import Header from '../src/components/Header';
+import InfoButton from '../src/components/InfoButton';
+
 import { zonasDeEstacionamiento as initialZones, Zona, generarPoligonoCalle } from '../src/data/EstacionamientoMedido';
-
-
-// locación default si el usuario no da permisos de ubicación
 
 const plazaMorenoLocation = {
     latitude: -34.92145,
@@ -24,10 +24,20 @@ export default function MapScreen() {
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [carLocation, setCarLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [modalInfo, setModalInfo] = useState<{ visible: boolean; zone: Zona | null }>({ visible: false, zone: null });
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const mapRef = useRef<MapView | null>(null);
   const [zonas, setZonas] = useState<Zona[]>(initialZones);
 
-  // pido permisos para la ubicación y cargo la ubicación del auto
+  // 👉 ARRAY DE INFO GENERAL PARA EL MODAL
+  const zonasInfo = [
+    { color: 'rgba(255, 105, 180, 1)', label: 'Zona Rosa', schedule: 'LUNES A VIERNES de 7 a 14hs.' },
+    { color: 'rgba(0, 0, 255, 1)', label: 'Zona Azul', schedule: 'LUNES A VIERNES de 7 a 20hs. SÁBADOS de 9 a 20hs.' },
+    { color: 'rgba(0, 128, 0, 1)', label: 'Zona Verde', schedule: 'LUNES A SÁBADOS de 9 a 20hs.' },
+    { color: 'rgba(255, 255, 0, 1)', label: 'Zona Amarilla', schedule: 'LUNES A VIERNES de 7 a 20hs.' },
+    { color: 'rgba(0, 166, 255, 1)', label: 'Zona Celeste (City Bell)', schedule: 'LUNES A VIERNES de 7 a 20hs.' },
+    { color: 'rgba(255, 0, 0, 1)', label: 'Zona Roja', schedule: 'PROHIBIDO ESTACIONAR' },
+  ];
+
   useEffect(() => {
       const init = async () => {
           await requestLocationPermission();
@@ -35,14 +45,9 @@ export default function MapScreen() {
       };
       init();
   }, []);
-  
-  // esto a modo de prueba genero un polígono para probar el modal
-  
 
-  // permisos de ubicación, utiliza expo-location
   const requestLocationPermission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      // si no los otorga da la ubicación de plaza moreno por default
       if (status !== 'granted') {
           setMapRegion(plazaMorenoLocation);
           return;
@@ -56,7 +61,6 @@ export default function MapScreen() {
       setMapRegion({ ...currentUserLocation, latitudeDelta: 0.005, longitudeDelta: 0.005 });
   };
 
-  // consulta a async si está guardado el auto y de ser así lo retorna
   const loadCarLocation = async () => {
       try {
           const stored = await AsyncStorage.getItem('carLocation');
@@ -66,48 +70,40 @@ export default function MapScreen() {
       }
   };
 
-  // funcion para guardar el auto en la ubicación del usuario, utiliza libreria point in polygon para comprobar si está en zona de estacionamiendo medido
   const estacionarVehiculo = async () => {
     if (!userLocation) return;
-
     let detectedZone: Zona | null = null;
     const userPoint = [userLocation.longitude, userLocation.latitude];
 
-    // Recorro todas las zonas
     for (const zona of zonas) {
         for (const calle of zona.calles) {
             const polygon = generarPoligonoCalle(calle).map(p => [p.longitude, p.latitude]); 
             if (inside(userPoint, polygon)) {
                 detectedZone = zona;
-                break; // sale del for de calles
+                break;
             }
         }
-        if (detectedZone) break; // sale del for de zonas si encontró
+        if (detectedZone) break;
     }
 
-    // Si estoy en alguna zona → muestro modal
     if (detectedZone) {
         setModalInfo({ visible: true, zone: detectedZone });
     }
 
-    // Estaciona y guarda ubicación en AsyncStorage
     setCarLocation(userLocation);
     try {
         await AsyncStorage.setItem('carLocation', JSON.stringify(userLocation));
     } catch (error) {
         console.log('Error guardando ubicación del auto:', error);
     }
-};
+  };
 
-
-  // para volver a mi ubicación con función de react native maps
   const goToMyLocation = () => {
       if (userLocation) {
           mapRef.current?.animateToRegion({ ...userLocation, latitudeDelta: 0.005, longitudeDelta: 0.005 }, 1000);
       }
   };
 
-  // pantalla de carga cuando no se indica si el usuario da o no ubicación
   if (!mapRegion) {
       return (
           <View style={styles.container}>
@@ -119,15 +115,26 @@ export default function MapScreen() {
   
   return (
       <View style={styles.container}>
+          <StatusBar barStyle="light-content" />
+
+          {/* ✅ HEADER */}
+          <Header />
+
+          {/* ✅ BOTÓN DE INFO */}
+          <InfoButton onPress={() => setShowInfoModal(true)} />
+
+          {/* 🎯 Botón para volver a mi ubicación */}
           <TouchableOpacity style={styles.locationButton} onPress={goToMyLocation}>
               <Fontisto name="crosshairs" size={22} color="#333" />
           </TouchableOpacity>
 
+          {/* 🚗 Botón estacionar */}
           <TouchableOpacity style={styles.parkButton} onPress={estacionarVehiculo}>
               <FontAwesome name="car" size={24} color="white" />
               <Text style={styles.parkButtonText}>Estacionar</Text>
           </TouchableOpacity>
 
+          {/* 🗺️ MAPA */}
           <MapView
               ref={mapRef}
               provider={PROVIDER_GOOGLE}
@@ -148,7 +155,7 @@ export default function MapScreen() {
                         />
                         );
                     })
-                    )}
+                )}
 
               {userLocation && (
                   <Marker coordinate={userLocation} title="Tu Ubicación">
@@ -161,34 +168,36 @@ export default function MapScreen() {
                   </Marker>
               )}
           </MapView>
-          {modalInfo.zone && (
-              <ParkingInfoModal
-                  visible={modalInfo.visible}
-                  onClose={() => setModalInfo({ visible: false, zone: null })}
-                  zoneName={modalInfo.zone.nombre}
-                  schedule={modalInfo.zone.horarios}
-              />
-          )}
+
+          {/* ✅ MODAL DE INFO GENERAL */}
+          <ParkingInfoModal
+              visible={showInfoModal}
+              onClose={() => setShowInfoModal(false)}
+              zonas={zonasInfo}
+          />
+
       </View>
   );
 }
 
-// estilos
 const styles = StyleSheet.create({
   container: {
       flex: 1,
       backgroundColor: 'black',
       alignItems: 'center',
       justifyContent: 'center',
+      paddingTop: 95, // 🔽 BAJA EL CONTENIDO PARA RESPETAR LA BARRA DE ESTADO Y EL HEADER
   },
   mapStyle: {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
   },
   loadingText: { color: 'white', marginTop: 10 },
+
+  /* 🎯 BOTÓN UBICACIÓN */
   locationButton: {
       position: 'absolute',
-      top: 60,
+      top: 160,
       right: 20,
       backgroundColor: 'white',
       width: 48,
@@ -203,6 +212,8 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
   },
+
+  /* 🚗 BOTÓN ESTACIONAR (lo dejamos inline) */
   parkButton: {
       position: 'absolute',
       bottom: 40,
