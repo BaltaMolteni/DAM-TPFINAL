@@ -482,6 +482,116 @@ export const zonasDeEstacionamiento: Zona[] = [
       },
     ],
   },
+
+  // ZONA ROSA
+  {
+    nombre: "City Bell",
+    color: "rgba(255, 105, 180, 1)",
+    horarios: "LUNES A VIERNES de 7 a 14hs.",
+    calles: [
+      // 14 e/ 44 y av 50
+      {
+        start: { latitude: -34.921392, longitude: -57.956957 },
+        end: { latitude: -34.918992, longitude: -57.960291 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.918992, longitude: -57.960291 },
+        end: { latitude: -34.91737420721228, longitude: -57.96239033807741 },
+        width: 4, // metros aprox. de la calle
+      },
+      // av 13 e/ 44 y av 50
+      {
+        start: { latitude: -34.920405, longitude: -57.955957 },
+        end: { latitude: -34.916834, longitude: -57.960789 },
+        width: 10, // metros aprox. de la calle
+      },
+      // 12 e/ 44 y av 50
+      {
+        start: { latitude: -34.919433, longitude: -57.954897 },
+        end: { latitude: -34.91545, longitude: -57.960274 },
+        width: 10, // metros aprox. de la calle
+      },
+      // 11 e/ 44 y av 48
+      {
+        start: { latitude: -34.917694, longitude: -57.954991 },
+        end: { latitude: -34.914533, longitude: -57.959259 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 10 e/ 44 y av 47
+      {
+        start: { latitude: -34.915993, longitude: -57.955057 },
+        end: { latitude: -34.913613, longitude: -57.958253 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 9 e/ 44 y av 46
+      {
+        start: { latitude: -34.914169, longitude: -57.955201 },
+        end: { latitude: -34.912686, longitude: -57.957255 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 49 e/ 15 y 11
+      {
+        start: { latitude: -34.921438, longitude: -57.958245 },
+        end: { latitude: -34.918419, longitude: -57.954964 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 48 e/ 15 y 11
+      {
+        start: { latitude: -34.921195, longitude: -57.959423 },
+        end: { latitude: -34.9203248897087, longitude: -57.95843053592877 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.9203248897087, longitude: -57.95843053592877 },
+        end: { latitude: -34.917157, longitude: -57.955016 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 47 e/ 15 y 10
+      {
+        start: { latitude: -34.920547, longitude: -57.960305 },
+        end: { latitude: -34.917752, longitude: -57.957203 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.917752, longitude: -57.957203 },
+        end: { latitude: -34.91575, longitude: -57.955085 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 46 e/ 15 y 9
+      {
+        start: { latitude: -34.919836, longitude: -57.961277 },
+        end: { latitude: -34.918991, longitude: -57.960291 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.918991, longitude: -57.960291 },
+        end: { latitude: -34.916076, longitude: -57.95718 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.916076, longitude: -57.95718 },
+        end: { latitude: -34.914254, longitude: -57.95516 },
+        width: 4, // metros aprox. de la calle
+      },
+      // 45 e/ 15 y 8
+      {
+        start: { latitude: -34.919046, longitude: -57.962304 },
+        end: { latitude: -34.918178, longitude: -57.961322 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.918178, longitude: -57.961322 },
+        end: { latitude: -34.913458, longitude: -57.956173 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.913458, longitude: -57.956173 },
+        end: { latitude: -34.912557, longitude: -57.955299 },
+        width: 4, // metros aprox. de la calle
+      },
+    ],
+  },
 ];
 
 export function generarPoligonoCalle(
