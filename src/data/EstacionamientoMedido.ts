@@ -25,8 +25,8 @@ export const zonasDeEstacionamiento: Zona[] = [
     calles: [
       { 
         start: { latitude: -34.912541, longitude: -57.955129 },
-        end:   { latitude: -34.913970, longitude: -57.953185 },
-        width: 10, // metros aprox. de la calle
+        end:   { latitude: -34.913975, longitude: -57.953240 },
+        width: 4, // metros aprox. de la calle
       },
       { 
         start: { latitude: -34.911534, longitude: -57.955213 },
@@ -36,57 +36,122 @@ export const zonasDeEstacionamiento: Zona[] = [
       { 
         start: { latitude: -34.914227, longitude: -57.955126 },
         end:   { latitude: -34.917284, longitude: -57.951068 },
-        width: 10,
+        width: 4,
       },
       { 
         start: { latitude: -34.916096, longitude: -57.954931 },
         end:   { latitude: -34.918184, longitude: -57.952114 },
-        width: 10,
+        width: 4,
       },
       { 
         start: { latitude: -34.917788, longitude: -57.954860 },
         end:   { latitude: -34.919112, longitude: -57.953115 },
-        width: 10,
+        width: 4,
       },
       { 
-        start: { latitude: -34.915457, longitude: -57.949121 },
-        end:   { latitude: -34.919964, longitude: -57.954150 },
-        width: 10,
+        start: { latitude: -34.915423, longitude: -57.949085 },
+        end:   { latitude: -34.917274, longitude: -57.951056 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.917274, longitude: -57.951056 },
+        end:   { latitude: -34.918159, longitude: -57.952083 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.918159, longitude: -57.952083 },
+        end:   { latitude: -34.919094, longitude: -57.953097 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.919094, longitude: -57.953097 },
+        end:   { latitude: -34.919983, longitude: -57.954173 },
+        width: 4,
       },
       { 
         start: { latitude: -34.919413, longitude: -57.954764 },
-        end:   { latitude: -34.912028, longitude: -57.946675 },
-        width: 10,
+        end:   { latitude: -34.916754, longitude: -57.951838 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.916754, longitude: -57.951838 },
+        end:   { latitude: -34.914911, longitude: -57.949824 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.914911, longitude: -57.949824 },
+        end:   { latitude: -34.914345, longitude: -57.949166 },
+        width: 8,
+      },
+      { 
+        start: { latitude: -34.914345, longitude: -57.949166 },
+        end:   { latitude: -34.913750, longitude: -57.948557 },
+        width: 8,
       },
       { 
         start: { latitude: -34.914261, longitude: -57.947902 },
         end:   { latitude: -34.912573, longitude: -57.945977 },
-        width: 10,
+        width: 8,
       },
       { 
         start: { latitude: -34.919413, longitude: -57.954764 },
         end:   { latitude: -34.912028, longitude: -57.946675 },
-        width: 10,
+        width: 4,
       },
       { 
         start: { latitude: -34.912542, longitude: -57.945938 },
         end:   { latitude: -34.910071, longitude: -57.949301 },
-        width: 10,
+        width: 4,
       },
       { 
         start: { latitude: -34.913466, longitude: -57.946980 },
         end:   { latitude: -34.910301, longitude: -57.951235 },
-        width: 10,
+        width: 4,
       },
       { 
-        start: { latitude: -34.913877, longitude: -57.948685 },
+        start: { latitude: -34.911003, longitude: -57.952615 },
         end:   { latitude: -34.910589, longitude: -57.953061 },
-        width: 10,
+        width: 4,
       },
       { 
-        start: { latitude: -34.910009, longitude: -57.948834 },
-        end:   { latitude: -34.910693, longitude: -57.954251 },
-        width: 10,
+        start: { latitude: -34.911003, longitude: -57.952615 },
+        end:   { latitude: -34.911457, longitude: -57.952037 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.911457, longitude: -57.952037 },
+        end:   { latitude: -34.912101, longitude: -57.951086 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.912101, longitude: -57.951086 },
+        end:   { latitude: -34.913874, longitude: -57.948687 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.910696, longitude: -57.954273 },
+        end:   { latitude: -34.910583, longitude: -57.953390 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.910583, longitude: -57.953390 },
+        end:   { latitude: -34.910584, longitude: -57.953054 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.910584, longitude: -57.953054 },
+        end:   { latitude: -34.910300, longitude: -57.951236 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.910300, longitude: -57.951236 },
+        end:   { latitude: -34.910271, longitude: -57.950759 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.910271, longitude: -57.950759 },
+        end:   { latitude: -34.910020, longitude: -57.948909 },
+        width: 4,
       },
       { 
         start: { latitude: -34.907112, longitude: -57.949010},
@@ -103,6 +168,11 @@ export const zonasDeEstacionamiento: Zona[] = [
     calles: [
       { 
         start: { latitude: -34.911281, longitude: -57.954544 },
+        end:   { latitude: -34.911573, longitude: -57.954098 },
+        width: 10, // metros aprox. de la calle
+      },
+      { 
+        start: { latitude: -34.911573, longitude: -57.954098 },
         end:   { latitude: -34.914773, longitude: -57.949806 },
         width: 10, // metros aprox. de la calle
       },
@@ -114,7 +184,7 @@ export const zonasDeEstacionamiento: Zona[] = [
       { 
         start: { latitude: -34.914051, longitude: -57.953153 },
         end:   { latitude: -34.916300, longitude: -57.950130 },
-        width: 10,
+        width: 4,
       },
     ],
   },
@@ -171,6 +241,46 @@ export const zonasDeEstacionamiento: Zona[] = [
       },
     ],
   },
+
+  {
+    nombre: 'Calle 12',
+    color: 'rgba(0, 128, 0, 1)',
+    horarios: 'LUNES A SÁBADOS de 9 a 20hs.',
+    calles: [
+      { 
+        start: { latitude: -34.928920, longitude: -57.942159 },
+        end:   { latitude: -34.922605, longitude: -57.950727 },
+        width: 4, // metros aprox. de la calle
+      },
+      { 
+        start: { latitude: -34.922605, longitude: -57.950727 },
+        end:   { latitude: -34.921894, longitude: -57.951521 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.921894, longitude: -57.951521 },
+        end:   { latitude: -34.921429, longitude: -57.952293 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.921378, longitude: -57.950989 },
+        end:   { latitude: -34.922819, longitude: -57.952494 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.921696, longitude: -57.949779 },
+        end:   { latitude: -34.923455, longitude: -57.951698 },
+        width: 4,
+      },
+      { 
+        start: { latitude: -34.922356, longitude: -57.948886 },
+        end:   { latitude: -34.924117, longitude: -57.950863 },
+        width: 4,
+      },
+      
+    ],
+  },
+  
 ];
 
 export function generarPoligonoCalle(calle: Calle): { latitude: number; longitude: number }[] {
