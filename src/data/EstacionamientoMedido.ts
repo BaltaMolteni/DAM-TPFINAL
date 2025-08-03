@@ -616,7 +616,7 @@ export function generarPoligonoCalle(
   const nx = -dy / length;
   const ny = dx / length;
 
-  // 🔥 Calculamos los 4 vértices del rectángulo corrigiendo ambos ejes
+  // Calculamos los 4 vértices del rectángulo corrigiendo ambos ejes
   const p1 = {
     latitude: start.latitude + ny * offsetLat,
     longitude: start.longitude + nx * offsetLng,

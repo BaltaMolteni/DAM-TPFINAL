@@ -1,18 +1,38 @@
-import { FontAwesome, Fontisto } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Location from 'expo-location';
-import inside from 'point-in-polygon';
-import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View, StatusBar, Alert } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import { FontAwesome, Fontisto } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
+import inside from "point-in-polygon";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import MapView, {
+  Marker,
+  Polygon,
+  PROVIDER_GOOGLE,
+  Region,
+} from "react-native-maps";
 
-import ParkingInfoModal from '../src/components/ParkingInfoModal';
-import Header from '../src/components/Header';
-import InfoButton from '../src/components/InfoButton';
-import DetectedZoneModal from '../src/components/DetectedZoneModal';
-import TestLocationButton from '../src/components/TestLocationButton';
+import DetectedZoneModal from "../src/components/DetectedZoneModal";
+import Header from "../src/components/Header";
+import InfoButton from "../src/components/InfoButton";
+import ParkingInfoModal from "../src/components/ParkingInfoModal";
+import PuntoLimiteModal from "../src/components/PuntoLimiteModal";
+import TestLocationButton from "../src/components/TestLocationButton";
 
-import { zonasDeEstacionamiento as initialZones, Zona, generarPoligonoCalle } from '../src/data/EstacionamientoMedido';
+import {
+  generarPoligonoCalle,
+  zonasDeEstacionamiento as initialZones,
+  Zona,
+} from "../src/data/EstacionamientoMedido";
+import { verificarProximidadPuntoLimite } from "../src/data/PuntosLimite";
 
 const plazaMorenoLocation = {
   latitude: -34.92145,
@@ -23,14 +43,33 @@ const plazaMorenoLocation = {
 
 export default function MapScreen() {
   const [mapRegion, setMapRegion] = useState<Region | null>(null);
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [carLocation, setCarLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [carLocation, setCarLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   // ✅ ubicación de prueba (si se selecciona desde el menú)
-  const [testLocation, setTestLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [testLocation, setTestLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   // ✅ Modal para mostrar la zona detectada al estacionar
-  const [modalInfo, setModalInfo] = useState<{ visible: boolean; zone: Zona | null }>({ visible: false, zone: null });
+  const [modalInfo, setModalInfo] = useState<{
+    visible: boolean;
+    zone: Zona | null;
+  }>({ visible: false, zone: null });
+
+  // ✅ Modal de advertencia de punto límite
+  const [showPuntoLimiteModal, setShowPuntoLimiteModal] = useState(false);
+  const [puntoLimiteData, setPuntoLimiteData] = useState({
+    descripcion: "",
+    pendingAction: null as (() => void) | null,
+  });
 
   // ✅ Modal de info general de zonas
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -40,12 +79,36 @@ export default function MapScreen() {
 
   // 👉 ARRAY DE INFO GENERAL PARA EL MODAL
   const zonasInfo = [
-    { color: 'rgba(255, 105, 180, 1)', label: 'Zona Rosa', schedule: 'LUNES A VIERNES de 7 a 14hs.' },
-    { color: 'rgba(0, 0, 255, 1)', label: 'Zona Azul', schedule: 'LUNES A VIERNES de 7 a 20hs. SÁBADOS de 9 a 20hs.' },
-    { color: 'rgba(0, 128, 0, 1)', label: 'Zona Verde', schedule: 'LUNES A SÁBADOS de 9 a 20hs.' },
-    { color: 'rgba(255, 255, 0, 1)', label: 'Zona Amarilla', schedule: 'LUNES A VIERNES de 7 a 20hs.' },
-    { color: 'rgba(0, 166, 255, 1)', label: 'Zona Celeste (City Bell)', schedule: 'LUNES A VIERNES de 7 a 20hs.' },
-    { color: 'rgba(255, 0, 0, 1)', label: 'Zona Roja', schedule: 'PROHIBIDO ESTACIONAR' },
+    {
+      color: "rgba(255, 105, 180, 1)",
+      label: "Zona Rosa",
+      schedule: "LUNES A VIERNES de 7 a 14hs.",
+    },
+    {
+      color: "rgba(0, 0, 255, 1)",
+      label: "Zona Azul",
+      schedule: "LUNES A VIERNES de 7 a 20hs. SÁBADOS de 9 a 20hs.",
+    },
+    {
+      color: "rgba(0, 128, 0, 1)",
+      label: "Zona Verde",
+      schedule: "LUNES A SÁBADOS de 9 a 20hs.",
+    },
+    {
+      color: "rgba(255, 255, 0, 1)",
+      label: "Zona Amarilla",
+      schedule: "LUNES A VIERNES de 7 a 20hs.",
+    },
+    {
+      color: "rgba(0, 166, 255, 1)",
+      label: "Zona Celeste (City Bell)",
+      schedule: "LUNES A VIERNES de 7 a 20hs.",
+    },
+    {
+      color: "rgba(255, 0, 0, 1)",
+      label: "Zona Roja",
+      schedule: "PROHIBIDO ESTACIONAR",
+    },
   ];
 
   useEffect(() => {
@@ -59,7 +122,7 @@ export default function MapScreen() {
   // ✅ Solicitar permisos de ubicación y obtener GPS
   const requestLocationPermission = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
+    if (status !== "granted") {
       setMapRegion(plazaMorenoLocation);
       return;
     }
@@ -69,16 +132,20 @@ export default function MapScreen() {
       longitude: location.coords.longitude,
     };
     setUserLocation(currentUserLocation);
-    setMapRegion({ ...currentUserLocation, latitudeDelta: 0.005, longitudeDelta: 0.005 });
+    setMapRegion({
+      ...currentUserLocation,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    });
   };
 
   // ✅ Cargar la última ubicación del auto guardada
   const loadCarLocation = async () => {
     try {
-      const stored = await AsyncStorage.getItem('carLocation');
+      const stored = await AsyncStorage.getItem("carLocation");
       if (stored) setCarLocation(JSON.parse(stored));
     } catch (error) {
-      console.log('Error cargando ubicación del auto:', error);
+      console.log("Error cargando ubicación del auto:", error);
     }
   };
 
@@ -88,12 +155,35 @@ export default function MapScreen() {
     const activeLocation = testLocation || userLocation;
     if (!activeLocation) return;
 
+    // 🚨 Verificar si está cerca de un punto límite
+    const puntoLimiteCercano = verificarProximidadPuntoLimite(activeLocation);
+    if (puntoLimiteCercano) {
+      // Mostrar modal de punto límite
+      setPuntoLimiteData({
+        descripcion: puntoLimiteCercano.descripcion || "",
+        pendingAction: () => continuarConEstacionamiento(activeLocation),
+      });
+      setShowPuntoLimiteModal(true);
+      return;
+    }
+
+    continuarConEstacionamiento(activeLocation);
+  };
+
+  // ✅ Función auxiliar para continuar con el estacionamiento
+  const continuarConEstacionamiento = async (activeLocation: {
+    latitude: number;
+    longitude: number;
+  }) => {
     let detectedZone: Zona | null = null;
     const userPoint = [activeLocation.longitude, activeLocation.latitude];
 
     for (const zona of zonas) {
       for (const calle of zona.calles) {
-        const polygon = generarPoligonoCalle(calle).map(p => [p.longitude, p.latitude]); 
+        const polygon = generarPoligonoCalle(calle).map((p) => [
+          p.longitude,
+          p.latitude,
+        ]);
         if (inside(userPoint, polygon)) {
           detectedZone = zona;
           break;
@@ -105,9 +195,9 @@ export default function MapScreen() {
     // 🚗 Guardar ubicación del auto SIEMPRE, aunque no esté en zona
     setCarLocation(activeLocation);
     try {
-      await AsyncStorage.setItem('carLocation', JSON.stringify(activeLocation));
+      await AsyncStorage.setItem("carLocation", JSON.stringify(activeLocation));
     } catch (error) {
-      console.log('Error guardando ubicación del auto:', error);
+      console.log("Error guardando ubicación del auto:", error);
     }
 
     // 📍 Si está en una zona medida, abrir modal con info
@@ -115,7 +205,10 @@ export default function MapScreen() {
       setModalInfo({ visible: true, zone: detectedZone });
     } else {
       // 📍 Si NO está en zona, igual mostrar alerta de que estacionó en zona libre
-      Alert.alert("Estacionado en zona libre", "No hay estacionamiento medido en esta ubicación.");
+      Alert.alert(
+        "Estacionado en zona libre",
+        "No hay estacionamiento medido en esta ubicación."
+      );
     }
   };
 
@@ -124,7 +217,10 @@ export default function MapScreen() {
     if (testLocation) {
       setTestLocation(null); // vuelve a GPS real si hay test activo
     } else if (userLocation) {
-      mapRef.current?.animateToRegion({ ...userLocation, latitudeDelta: 0.005, longitudeDelta: 0.005 }, 1000);
+      mapRef.current?.animateToRegion(
+        { ...userLocation, latitudeDelta: 0.005, longitudeDelta: 0.005 },
+        1000
+      );
     }
   };
 
@@ -152,7 +248,9 @@ export default function MapScreen() {
       <InfoButton onPress={() => setShowInfoModal(true)} />
 
       {/* ✅ BOTÓN DE TEST LOCATIONS */}
-      <TestLocationButton onSelectLocation={(coords) => setTestLocation(coords)} />
+      <TestLocationButton
+        onSelectLocation={(coords) => setTestLocation(coords)}
+      />
 
       {/* 🎯 Botón para volver a mi ubicación */}
       <TouchableOpacity style={styles.locationButton} onPress={goToMyLocation}>
@@ -200,7 +298,11 @@ export default function MapScreen() {
             coordinate={activeLocation}
             title={testLocation ? "Ubicación de prueba" : "Tu Ubicación"}
           >
-            <FontAwesome name="circle" size={24} color={testLocation ? "orange" : "#4A90E2"} />
+            <FontAwesome
+              name="circle"
+              size={24}
+              color={testLocation ? "orange" : "#4A90E2"}
+            />
           </Marker>
         )}
 
@@ -228,6 +330,19 @@ export default function MapScreen() {
           schedule={modalInfo.zone.horarios}
         />
       )}
+
+      {/* ✅ MODAL DE PUNTO LÍMITE */}
+      <PuntoLimiteModal
+        visible={showPuntoLimiteModal}
+        descripcion={puntoLimiteData.descripcion}
+        onClose={() => {
+          setShowPuntoLimiteModal(false);
+          // Ejecutar la acción pendiente si existe
+          if (puntoLimiteData.pendingAction) {
+            puntoLimiteData.pendingAction();
+          }
+        }}
+      />
     </View>
   );
 }
@@ -235,31 +350,31 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 95,
   },
   mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
-  loadingText: { color: 'white', marginTop: 10 },
+  loadingText: { color: "white", marginTop: 10 },
 
   /* 🎯 Botón ubicación */
   locationButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 160,
     right: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     width: 48,
     height: 48,
     borderRadius: 24,
     zIndex: 1,
     elevation: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -267,21 +382,21 @@ const styles = StyleSheet.create({
 
   /* 🚗 Botón estacionar */
   parkButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
-    backgroundColor: '#4A90E2',
+    backgroundColor: "#4A90E2",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
     zIndex: 1,
     elevation: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   parkButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 10,
   },
 });
