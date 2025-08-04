@@ -649,11 +649,6 @@ export const zonasDeEstacionamiento: Zona[] = [
         end: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
         width: 4, // metros aprox. de la calle
       },
-      /* {
-        start: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
-        end: { latitude: -34.921326241881886, longitude: -57.952460233636145 },
-        width: 4, // metros aprox. de la calle
-      }, */
       {
         start: {
           latitude: -34.921326241881886,
@@ -701,6 +696,47 @@ export const zonasDeEstacionamiento: Zona[] = [
         },
         end: { latitude: -34.91977746291946, longitude: -57.955038303473025 },
         width: 4, // metros aprox. de la calle
+      },
+      // Plaza San Martín
+      {
+        start: {
+          latitude: -34.91663790413026,
+          longitude: -57.94715041492138,
+        },
+        end: { latitude: -34.91478601118347, longitude: -57.94961268267648 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91666429662821,
+          longitude: -57.947091406287846,
+        },
+        end: { latitude: -34.91584172727335, longitude: -57.946125811089786 },
+        width: 6, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91580213816601,
+          longitude: -57.94617945526745,
+        },
+        end: { latitude: -34.913937029664574, longitude: -57.94866854514605 },
+        width: 3, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.913944945478,
+          longitude: -57.94869134836235,
+        },
+        end: { latitude: -34.91436283899178, longitude: -57.94911513736595 },
+        width: 3, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91436283899178,
+          longitude: -57.94911513736595,
+        },
+        end: { latitude: -34.91478073037815, longitude: -57.94960866380052 },
+        width: 3, // metros aprox. de la calle
       },
     ],
   },
