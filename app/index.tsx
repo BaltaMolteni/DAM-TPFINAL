@@ -1,5 +1,10 @@
+import { FontAwesome, FontAwesome6, Fontisto } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Linking from 'expo-linking';
+import * as Location from 'expo-location';
+import inside from 'point-in-polygon';
 import React, { useEffect, useRef, useState } from 'react';
-import { 
+import {
   ActivityIndicator,
   Alert,
   Dimensions,
@@ -7,7 +12,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View 
+  View
 } from 'react-native';
 import MapView, {
   Marker,
@@ -16,11 +21,6 @@ import MapView, {
   PROVIDER_GOOGLE,
   Region
 } from 'react-native-maps';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Location from 'expo-location';
-import inside from 'point-in-polygon';
-import * as Linking from 'expo-linking';
-import { FontAwesome, Fontisto } from '@expo/vector-icons';
 
 import DetectedZoneModal from '../src/components/DetectedZoneModal';
 import Header from '../src/components/Header';
@@ -35,8 +35,8 @@ import {
 } from '../src/utils/notifications';
 
 import {
-  generarPoligonoCalle,
   generarPoligonoAnillo,
+  generarPoligonoCalle,
   zonasDeEstacionamiento as initialZones,
   Zona,
 } from '../src/data/EstacionamientoMedido';
@@ -443,7 +443,7 @@ export default function MapScreen() {
         {/* ✅ Marker del auto estacionado */}
         {carLocation && (
           <Marker coordinate={carLocation} title="Auto Estacionado">
-            <FontAwesome name="car" size={32} color="#0000FF" />
+            <FontAwesome6 name="car-on" size={32} color="#0000FF" />
           </Marker>
         )}
 
