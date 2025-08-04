@@ -631,7 +631,7 @@ export const zonasDeEstacionamiento: Zona[] = [
       },
       {
         start: { latitude: -34.9216550287132, longitude: -57.95262250727056 },
-        end: { latitude: -34.92154946519034, longitude: -57.95255679314767 },
+        end: { latitude: -34.92144779204661, longitude: -57.95251215069238 },
         width: 2, // metros aprox. de la calle
       },
       {
@@ -649,31 +649,39 @@ export const zonasDeEstacionamiento: Zona[] = [
         end: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
         width: 4, // metros aprox. de la calle
       },
-      {
+      /* {
         start: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
         end: { latitude: -34.921326241881886, longitude: -57.952460233636145 },
         width: 4, // metros aprox. de la calle
-      },
+      }, */
       {
         start: {
           latitude: -34.921326241881886,
           longitude: -57.952460233636145,
         },
-        end: { latitude: -34.91972627380816, longitude: -57.95456710878424 },
+        end: { latitude: -34.920912966215965, longitude: -57.95307878652299 },
         width: 2, // metros aprox. de la calle
       },
       {
         start: {
-          latitude: -34.91972627380816,
-          longitude: -57.95456710878424,
+          latitude: -34.920912966215965,
+          longitude: -57.95307878652299,
         },
-        end: { latitude: -34.919772458886015, longitude: -57.954541627825336 },
-        width: 4, // metros aprox. de la calle
+        end: { latitude: -34.92011683078938, longitude: -57.95410339035511 },
+        width: 2, // metros aprox. de la calle
       },
       {
         start: {
-          latitude: -34.91972627380816,
-          longitude: -57.95456710878424,
+          latitude: -34.92011683078938,
+          longitude: -57.95410339035511,
+        },
+        end: { latitude: -34.9197825395765, longitude: -57.954529861580205 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91979573530778,
+          longitude: -57.95450572170026,
         },
         end: { latitude: -34.91974716705869, longitude: -57.95472133582053 },
         width: 4, // metros aprox. de la calle
