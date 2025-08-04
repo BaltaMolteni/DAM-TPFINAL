@@ -20,7 +20,7 @@ export default function PuntoLimiteModal({
           <Text style={styles.message}>
             Te encuentras cerca de una zona límite. Por favor, revisa
             manualmente tu ubicación para asegurarte de que el estacionamiento
-            esté permitido en este lugar.
+            medido abarque esta área.
           </Text>
 
           {descripcion && <Text style={styles.description}>{descripcion}</Text>}
