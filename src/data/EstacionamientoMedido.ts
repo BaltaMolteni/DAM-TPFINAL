@@ -631,7 +631,7 @@ export const zonasDeEstacionamiento: Zona[] = [
       },
       {
         start: { latitude: -34.9216550287132, longitude: -57.95262250727056 },
-        end: { latitude: -34.92154946519034, longitude: -57.95255679314767 },
+        end: { latitude: -34.92144779204661, longitude: -57.95251215069238 },
         width: 2, // metros aprox. de la calle
       },
       {
@@ -650,30 +650,33 @@ export const zonasDeEstacionamiento: Zona[] = [
         width: 4, // metros aprox. de la calle
       },
       {
-        start: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
-        end: { latitude: -34.921326241881886, longitude: -57.952460233636145 },
-        width: 4, // metros aprox. de la calle
-      },
-      {
         start: {
           latitude: -34.921326241881886,
           longitude: -57.952460233636145,
         },
-        end: { latitude: -34.91972627380816, longitude: -57.95456710878424 },
+        end: { latitude: -34.920912966215965, longitude: -57.95307878652299 },
         width: 2, // metros aprox. de la calle
       },
       {
         start: {
-          latitude: -34.91972627380816,
-          longitude: -57.95456710878424,
+          latitude: -34.920912966215965,
+          longitude: -57.95307878652299,
         },
-        end: { latitude: -34.919772458886015, longitude: -57.954541627825336 },
-        width: 4, // metros aprox. de la calle
+        end: { latitude: -34.92011683078938, longitude: -57.95410339035511 },
+        width: 2, // metros aprox. de la calle
       },
       {
         start: {
-          latitude: -34.91972627380816,
-          longitude: -57.95456710878424,
+          latitude: -34.92011683078938,
+          longitude: -57.95410339035511,
+        },
+        end: { latitude: -34.9197825395765, longitude: -57.954529861580205 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91979573530778,
+          longitude: -57.95450572170026,
         },
         end: { latitude: -34.91974716705869, longitude: -57.95472133582053 },
         width: 4, // metros aprox. de la calle
@@ -693,6 +696,47 @@ export const zonasDeEstacionamiento: Zona[] = [
         },
         end: { latitude: -34.91977746291946, longitude: -57.955038303473025 },
         width: 4, // metros aprox. de la calle
+      },
+      // Plaza San Martín
+      {
+        start: {
+          latitude: -34.91663790413026,
+          longitude: -57.94715041492138,
+        },
+        end: { latitude: -34.91478601118347, longitude: -57.94961268267648 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91666429662821,
+          longitude: -57.947091406287846,
+        },
+        end: { latitude: -34.91584172727335, longitude: -57.946125811089786 },
+        width: 6, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91580213816601,
+          longitude: -57.94617945526745,
+        },
+        end: { latitude: -34.913937029664574, longitude: -57.94866854514605 },
+        width: 3, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.913944945478,
+          longitude: -57.94869134836235,
+        },
+        end: { latitude: -34.91436283899178, longitude: -57.94911513736595 },
+        width: 3, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91436283899178,
+          longitude: -57.94911513736595,
+        },
+        end: { latitude: -34.91478073037815, longitude: -57.94960866380052 },
+        width: 3, // metros aprox. de la calle
       },
     ],
   },

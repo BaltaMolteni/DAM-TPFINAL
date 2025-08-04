@@ -31,14 +31,14 @@ export default function DetectedZoneModal({
 
   if (esProhibido) {
     mensajeHorario = "🚫 PROHIBIDO ESTACIONAR";
+  } else if (schedule.toUpperCase().includes("LUNES A VIERNES") && schedule.includes("14hs")) {
+    // Tribunales
+    if (day >= 1 && day <= 5 && hour >= 7 && hour < 14) {
+      mensajeHorario = "💰 Ahora debes pagar estacionamiento";
+    }
   } else if (schedule.toUpperCase().includes("LUNES A VIERNES") && schedule.toUpperCase().includes("SÁBADOS")) {
     // Zona Centro
     if ((day >= 1 && day <= 5 && hour >= 7 && hour < 20) || (day === 6 && hour >= 9 && hour < 20)) {
-      mensajeHorario = "💰 Ahora debes pagar estacionamiento";
-    }
-  } else if (schedule.toUpperCase().includes("LUNES A VIERNES")) {
-    // City Bell, Eje Cívico
-    if (day >= 1 && day <= 5 && hour >= 7 && hour < 20) {
       mensajeHorario = "💰 Ahora debes pagar estacionamiento";
     }
   } else if (schedule.toUpperCase().includes("LUNES A SÁBADOS")) {
@@ -46,12 +46,13 @@ export default function DetectedZoneModal({
     if (day >= 1 && day <= 6 && hour >= 9 && hour < 20) {
       mensajeHorario = "💰 Ahora debes pagar estacionamiento";
     }
-  } else if (schedule.toUpperCase().includes("LUNES A VIERNES") && schedule.includes("14hs")) {
-    // Tribunales
-    if (day >= 1 && day <= 5 && hour >= 7 && hour < 14) {
+  } else if (schedule.toUpperCase().includes("LUNES A VIERNES")) {
+    // City Bell, Eje Cívico
+    if (day >= 1 && day <= 5 && hour >= 7 && hour < 20) {
       mensajeHorario = "💰 Ahora debes pagar estacionamiento";
     }
   }
+
 
   return (
     <Modal visible={visible} transparent animationType="slide">

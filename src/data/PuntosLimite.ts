@@ -451,6 +451,176 @@ export const puntosLimite: PuntoLimite[] = [
     longitude: -57.953150386646406,
     descripcion: "rojo",
   },
+  {
+    latitude: -34.91980504215362,
+    longitude: -57.95442002743322,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.919985383581405,
+    longitude: -57.954232272811375,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92020531161557,
+    longitude: -57.95394259425195,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92038125361856,
+    longitude: -57.95370655987019,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.920662760038795,
+    longitude: -57.953341779462036,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.9208450366993,
+    longitude: -57.95309511627194,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.921056165411876,
+    longitude: -57.95280007329477,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92127169207904,
+    longitude: -57.95252112357086,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92154439847937,
+    longitude: -57.95256940333077,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92179236260362,
+    longitude: -57.95278666225006,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92204307499523,
+    longitude: -57.953011967796286,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.922280591291276,
+    longitude: -57.95326409543133,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.922513708468934,
+    longitude: -57.953521587484154,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.922733629737266,
+    longitude: -57.95377371513523,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92290516790988,
+    longitude: -57.95400974951698,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.915806227577235,
+    longitude: -57.94617250687264,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.915498311661445,
+    longitude: -57.94650510077421,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91520359106016,
+    longitude: -57.94685915234684,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.914790100671645,
+    longitude: -57.947390229705775,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91439860252277,
+    longitude: -57.947948129179316,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.9141434678995,
+    longitude: -57.948296816334164,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91394111918616,
+    longitude: -57.9486830544134,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91409947907809,
+    longitude: -57.94893518208522,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91431942288384,
+    longitude: -57.949155123213686,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91453936610029,
+    longitude: -57.94943407293757,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91478570180308,
+    longitude: -57.94959500547058,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91504303386397,
+    longitude: -57.94934287784105,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91528716864613,
+    longitude: -57.94903442381944,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.915579689553006,
+    longitude: -57.94866159676021,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91583042092618,
+    longitude: -57.94831290959797,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91605036010131,
+    longitude: -57.94802054880563,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91632968199876,
+    longitude: -57.947647721760696,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91654961982884,
+    longitude: -57.9473365855302,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.916648591660106,
+    longitude: -57.94714883090836,
+    descripcion: "amarillo",
+  },
 ];
 
 /**
