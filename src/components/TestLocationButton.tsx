@@ -6,10 +6,14 @@ interface TestLocationButtonProps {
   onSelectLocation: (
     coords: { latitude: number; longitude: number } | null
   ) => void;
+  onTogglePuntosLimite: () => void;
+  showingPuntosLimite: boolean;
 }
 
 export default function TestLocationButton({
   onSelectLocation,
+  onTogglePuntosLimite,
+  showingPuntosLimite,
 }: TestLocationButtonProps) {
   const [open, setOpen] = useState(false);
 
@@ -67,6 +71,29 @@ export default function TestLocationButton({
             }}
           >
             <Text style={styles.menuText}>⚠️ Zona Límite</Text>
+          </TouchableOpacity>
+
+          {/* Mostrar/Ocultar Puntos Límite */}
+          <TouchableOpacity
+            style={[
+              styles.menuItem,
+              { backgroundColor: showingPuntosLimite ? "#FF8C00" : "#f5f5f5" },
+            ]}
+            onPress={() => {
+              onTogglePuntosLimite();
+              setOpen(false);
+            }}
+          >
+            <Text
+              style={[
+                styles.menuText,
+                { color: showingPuntosLimite ? "white" : "#333" },
+              ]}
+            >
+              {showingPuntosLimite
+                ? "🔶 Ocultar Puntos Límite"
+                : "🔸 Mostrar Puntos Límite"}
+            </Text>
           </TouchableOpacity>
 
           {/* Volver al GPS */}
