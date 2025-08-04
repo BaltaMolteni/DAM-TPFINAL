@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface TestLocationButtonProps {
   onSelectLocation: (coords: { latitude: number; longitude: number } | null) => void;
@@ -70,7 +70,7 @@ export default function TestLocationButton({ onSelectLocation }: TestLocationBut
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 230, // 🔽 Ajustar la posición en pantalla
+    top: 280, 
     right: 20,
     alignItems: "flex-end",
     zIndex: 10,

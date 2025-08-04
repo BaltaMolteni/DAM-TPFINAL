@@ -3,16 +3,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import inside from 'point-in-polygon';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View, StatusBar, Alert } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import { ActivityIndicator, Alert, Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
-import ParkingInfoModal from '../src/components/ParkingInfoModal';
+import DetectedZoneModal from '../src/components/DetectedZoneModal';
 import Header from '../src/components/Header';
 import InfoButton from '../src/components/InfoButton';
-import DetectedZoneModal from '../src/components/DetectedZoneModal';
+import ParkingInfoModal from '../src/components/ParkingInfoModal';
 import TestLocationButton from '../src/components/TestLocationButton';
 
-import { zonasDeEstacionamiento as initialZones, Zona, generarPoligonoCalle } from '../src/data/EstacionamientoMedido';
+import { generarPoligonoCalle, zonasDeEstacionamiento as initialZones, Zona } from '../src/data/EstacionamientoMedido';
 
 const plazaMorenoLocation = {
   latitude: -34.92145,
@@ -25,6 +25,9 @@ export default function MapScreen() {
   const [mapRegion, setMapRegion] = useState<Region | null>(null);
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [carLocation, setCarLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  // ✅ Estado para guardar las coordenadas de la ruta a dibujar
+  const [routeCoordinates, setRouteCoordinates] = useState<{latitude: number, longitude: number}[]>([]);
 
   // ✅ ubicación de prueba (si se selecciona desde el menú)
   const [testLocation, setTestLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -87,6 +90,9 @@ export default function MapScreen() {
     // 🔄 usa ubicación de prueba si está activa, sino la del GPS
     const activeLocation = testLocation || userLocation;
     if (!activeLocation) return;
+    
+    // Si había una ruta dibujada, la oculta
+    if (routeCoordinates.length > 0) setRouteCoordinates([]);
 
     let detectedZone: Zona | null = null;
     const userPoint = [activeLocation.longitude, activeLocation.latitude];
@@ -119,14 +125,67 @@ export default function MapScreen() {
     }
   };
 
-  // ✅ Botón “volver a mi ubicación”
+  // ✅ Botón “volver a mi ubicación” (ahora también limpia la ruta)
   const goToMyLocation = () => {
+    if (routeCoordinates.length > 0) setRouteCoordinates([]); // Oculta la ruta si se está mostrando
     if (testLocation) {
       setTestLocation(null); // vuelve a GPS real si hay test activo
     } else if (userLocation) {
       mapRef.current?.animateToRegion({ ...userLocation, latitudeDelta: 0.005, longitudeDelta: 0.005 }, 1000);
     }
   };
+
+  // 🗺️ FUNCIÓN ACTUALIZADA: Obtener y dibujar la ruta con OSRM (sin API Key)
+  const getDirectionsToCar = async () => {
+    // Si la ruta ya se está mostrando, la ocultamos y terminamos.
+    if (routeCoordinates.length > 0) {
+      setRouteCoordinates([]);
+      return;
+    }
+
+    if (!carLocation) {
+      Alert.alert("Auto no encontrado", "Primero debés estacionar tu auto para poder obtener la ruta.");
+      return;
+    }
+    if (!userLocation) {
+        Alert.alert("Ubicación no disponible", "No se puede obtener tu ubicación actual para trazar la ruta.");
+        return;
+    }
+
+    try {
+      const startCoords = `${userLocation.longitude},${userLocation.latitude}`;
+      const endCoords = `${carLocation.longitude},${carLocation.latitude}`;
+      
+      // URL del servidor público de OSRM. No requiere API Key.
+      const url = `http://router.project-osrm.org/route/v1/driving/${startCoords};${endCoords}?overview=full&geometries=geojson`;
+      
+      const response = await fetch(url);
+      const json = await response.json();
+
+      if (json.routes && json.routes.length > 0) {
+          const geometry = json.routes[0].geometry.coordinates;
+          // OSRM devuelve [longitude, latitude], lo mapeamos al formato que espera Polyline
+          const coords = geometry.map((point: number[]) => ({
+            latitude: point[1],
+            longitude: point[0],
+          }));
+
+          setRouteCoordinates(coords);
+          
+          // Ajustar el mapa para que se vea toda la ruta
+          mapRef.current?.fitToCoordinates(coords, {
+            edgePadding: { top: 100, right: 50, bottom: 100, left: 50 },
+            animated: true,
+          });
+      } else {
+          Alert.alert("Ruta no encontrada", "No se pudo calcular una ruta a la ubicación del auto. Código: " + json.code);
+      }
+    } catch (error) {
+        console.error(error);
+        Alert.alert("Error", "Ocurrió un error al obtener la ruta.");
+    }
+  };
+
 
   // ✅ Pantalla de carga si todavía no hay región
   if (!mapRegion) {
@@ -159,6 +218,11 @@ export default function MapScreen() {
         <Fontisto name="crosshairs" size={22} color="#333" />
       </TouchableOpacity>
 
+      {/* 🗺️ BOTÓN: Ruta al auto */}
+      <TouchableOpacity style={styles.directionsButton} onPress={getDirectionsToCar}>
+        <FontAwesome name="road" size={22} color="#333" />
+      </TouchableOpacity>
+
       {/* 🚗 Botón estacionar */}
       <TouchableOpacity style={styles.parkButton} onPress={estacionarVehiculo}>
         <FontAwesome name="car" size={24} color="white" />
@@ -179,7 +243,6 @@ export default function MapScreen() {
         mapType="standard"
         pitchEnabled={false}
       >
-        {/* Dibujar polígonos */}
         {zonas.map((zona) =>
           zona.calles.map((calle, i) => {
             const coords = generarPoligonoCalle(calle);
@@ -192,6 +255,14 @@ export default function MapScreen() {
               />
             );
           })
+        )}
+        
+        {routeCoordinates.length > 0 && (
+            <Polyline
+                coordinates={routeCoordinates}
+                strokeColor="#3498db"
+                strokeWidth={6}
+            />
         )}
 
         {/* ✅ Marker del usuario (test o real) */}
@@ -250,6 +321,25 @@ const styles = StyleSheet.create({
   locationButton: {
     position: 'absolute',
     top: 160,
+    right: 20,
+    backgroundColor: 'white',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    zIndex: 1,
+    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+
+  /* 🗺️ Botón de ruta al auto */
+  directionsButton: {
+    position: 'absolute',
+    top: 220, 
     right: 20,
     backgroundColor: 'white',
     width: 48,
