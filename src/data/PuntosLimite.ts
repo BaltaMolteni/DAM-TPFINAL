@@ -62,6 +62,66 @@ export const puntosLimite: PuntoLimite[] = [
     descripcion: "amarillo",
   },
   {
+    latitude: -34.91716614417123,
+    longitude: -57.948960776126505,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91771598203811,
+    longitude: -57.94817757113251,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91734776622374,
+    longitude: -57.94655792670989,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91720260873353,
+    longitude: -57.94637017208804,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91797238038617,
+    longitude: -57.94573180634565,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91781402795283,
+    longitude: -57.94556550939487,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91854420608231,
+    longitude: -57.94480912644215,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91839025340438,
+    longitude: -57.94463746507361,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.919340356769425,
+    longitude: -57.94388644652212,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91917760836564,
+    longitude: -57.94369869190027,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.92010576207899,
+    longitude: -57.94283001138157,
+    descripcion: "amarillo",
+  },
+  {
+    latitude: -34.91995621089848,
+    longitude: -57.94265298559526,
+    descripcion: "amarillo",
+  },
+  {
     latitude: -34.921449,
     longitude: -57.952252,
     descripcion: "verde",
@@ -349,6 +409,21 @@ export const puntosLimite: PuntoLimite[] = [
   {
     latitude: -34.91399020850696,
     longitude: -57.95323621733068,
+    descripcion: "azul",
+  },
+  {
+    latitude: -34.91200085157285,
+    longitude: -57.94664886587342,
+    descripcion: "azul",
+  },
+  {
+    latitude: -34.91151696074656,
+    longitude: -57.947370380085296,
+    descripcion: "azul",
+  },
+  {
+    latitude: -34.91090918168373,
+    longitude: -57.94817373583864,
     descripcion: "azul",
   },
   {
