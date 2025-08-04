@@ -35,7 +35,10 @@ import {
   zonasDeEstacionamiento as initialZones,
   Zona,
 } from "../src/data/EstacionamientoMedido";
-import { verificarProximidadPuntoLimite } from "../src/data/PuntosLimite";
+import {
+  puntosLimite,
+  verificarProximidadPuntoLimite,
+} from "../src/data/PuntosLimite";
 
 const plazaMorenoLocation = {
   latitude: -34.92145,
@@ -77,6 +80,8 @@ export default function MapScreen() {
   // ✅ Modal de info general de zonas
   const [showInfoModal, setShowInfoModal] = useState(false);
 
+  // ✅ Controlar visualización de puntos límite
+  const [showPuntosLimite, setShowPuntosLimite] = useState(false);
 
   const mapRef = useRef<MapView | null>(null);
   const [zonas, setZonas] = useState<Zona[]>(initialZones);
@@ -280,6 +285,8 @@ export default function MapScreen() {
       {/* ✅ BOTÓN DE TEST LOCATIONS */}
       <TestLocationButton
         onSelectLocation={(coords) => setTestLocation(coords)}
+        onTogglePuntosLimite={() => setShowPuntosLimite(!showPuntosLimite)}
+        showingPuntosLimite={showPuntosLimite}
       />
 
       {/* 🎯 Botón para volver a mi ubicación */}
@@ -342,6 +349,22 @@ export default function MapScreen() {
             <FontAwesome name="car" size={32} color="#0000FF" />
           </Marker>
         )}
+
+        {/* ✅ Marcadores de puntos límite */}
+        {showPuntosLimite &&
+          puntosLimite.map((punto, index) => (
+            <Marker
+              key={`punto-limite-${index}`}
+              coordinate={{
+                latitude: punto.latitude,
+                longitude: punto.longitude,
+              }}
+              title="Punto Límite"
+              description={punto.descripcion || "Revisar ubicación manualmente"}
+            >
+              <FontAwesome name="warning" size={20} color="#FF8C00" />
+            </Marker>
+          ))}
       </MapView>
 
       {/* ✅ MODAL DE INFO GENERAL */}
