@@ -3,16 +3,27 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface TestLocationButtonProps {
-  onSelectLocation: (coords: { latitude: number; longitude: number } | null) => void;
+  onSelectLocation: (
+    coords: { latitude: number; longitude: number } | null
+  ) => void;
+  onTogglePuntosLimite: () => void;
+  showingPuntosLimite: boolean;
 }
 
-export default function TestLocationButton({ onSelectLocation }: TestLocationButtonProps) {
+export default function TestLocationButton({
+  onSelectLocation,
+  onTogglePuntosLimite,
+  showingPuntosLimite,
+}: TestLocationButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <View style={styles.container}>
       {/* Botón principal */}
-      <TouchableOpacity style={styles.mainButton} onPress={() => setOpen(!open)}>
+      <TouchableOpacity
+        style={styles.mainButton}
+        onPress={() => setOpen(!open)}
+      >
         <FontAwesome name="map-marker" size={24} color="white" />
       </TouchableOpacity>
 
@@ -29,6 +40,7 @@ export default function TestLocationButton({ onSelectLocation }: TestLocationBut
             <Text style={styles.menuText}>📍 Zona Centro</Text>
           </TouchableOpacity>
 
+
           {/* Prohibido Estacionar */}
           <TouchableOpacity
             style={styles.menuItem}
@@ -44,11 +56,56 @@ export default function TestLocationButton({ onSelectLocation }: TestLocationBut
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() => {
-              onSelectLocation({ latitude: -34.919340, longitude: -57.948302 });
+              onSelectLocation({ latitude: -34.91934, longitude: -57.948302 });
               setOpen(false);
             }}
           >
             <Text style={styles.menuText}>✅ Zona Libre</Text>
+          </TouchableOpacity>
+
+          {/* Zona Tribunales */}
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              onSelectLocation({ latitude: -34.917978, longitude: -57.959210 });
+              setOpen(false);
+            }}
+          >
+            <Text style={styles.menuText}>📍 Zona Tribunales</Text>
+          </TouchableOpacity>
+
+          {/* Zona Límite */}
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              onSelectLocation({ latitude: -34.912632, longitude: -57.945927 });
+              setOpen(false);
+            }}
+          >
+            <Text style={styles.menuText}>⚠️ Zona Límite</Text>
+          </TouchableOpacity>
+
+          {/* Mostrar/Ocultar Puntos Límite */}
+          <TouchableOpacity
+            style={[
+              styles.menuItem,
+              { backgroundColor: showingPuntosLimite ? "#FF8C00" : "#f5f5f5" },
+            ]}
+            onPress={() => {
+              onTogglePuntosLimite();
+              setOpen(false);
+            }}
+          >
+            <Text
+              style={[
+                styles.menuText,
+                { color: showingPuntosLimite ? "white" : "#333" },
+              ]}
+            >
+              {showingPuntosLimite
+                ? "🔶 Ocultar Puntos Límite"
+                : "🔸 Mostrar Puntos Límite"}
+            </Text>
           </TouchableOpacity>
 
           {/* Volver al GPS */}
@@ -59,7 +116,9 @@ export default function TestLocationButton({ onSelectLocation }: TestLocationBut
               setOpen(false);
             }}
           >
-            <Text style={[styles.menuText, { color: "white" }]}>🎯 Volver a GPS</Text>
+            <Text style={[styles.menuText, { color: "white" }]}>
+              🎯 Volver a GPS
+            </Text>
           </TouchableOpacity>
         </View>
       )}

@@ -12,9 +12,10 @@ interface ParkingInfoModalProps {
   visible: boolean;
   onClose: () => void;
   zonas: ZonaInfo[];
+  onOpenMap: () => void;
 }
 
-const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, zonas }) => {
+const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, zonas, onOpenMap }) => {
   return (
     <Modal
       animationType="slide"
@@ -52,6 +53,11 @@ const ParkingInfoModal: React.FC<ParkingInfoModalProps> = ({ visible, onClose, z
               </View>
             )}
           />
+
+          {/* Botón para abrir el mapa en navegador */}
+          <TouchableOpacity style={styles.mapButton} onPress={onOpenMap}>
+            <Text style={styles.mapButtonText}>🗺️ Ver Mapa Municipal</Text>
+          </TouchableOpacity>
 
         </View>
       </View>
@@ -119,6 +125,19 @@ const styles = StyleSheet.create({
   zoneSchedule: {
     fontSize: 15,
     color: '#555',
+  },
+  mapButton: {
+    backgroundColor: "#4A90E2",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginTop: 15,
+    alignItems: "center",
+  },
+  mapButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
