@@ -485,7 +485,7 @@ export const zonasDeEstacionamiento: Zona[] = [
 
   // ZONA ROSA
   {
-    nombre: "City Bell",
+    nombre: "Tribunales",
     color: "rgba(255, 105, 180, 1)",
     horarios: "LUNES A VIERNES de 7 a 14hs.",
     calles: [

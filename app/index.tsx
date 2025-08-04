@@ -2,6 +2,7 @@ import { FontAwesome, Fontisto } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import inside from "point-in-polygon";
+import * as Linking from "expo-linking";  
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -26,6 +27,8 @@ import InfoButton from "../src/components/InfoButton";
 import ParkingInfoModal from "../src/components/ParkingInfoModal";
 import PuntoLimiteModal from "../src/components/PuntoLimiteModal";
 import TestLocationButton from "../src/components/TestLocationButton";
+import { pedirPermisosNotificaciones, programarNotificacion } from "../src/utils/notifications";
+
 
 import {
   generarPoligonoCalle,
@@ -74,8 +77,21 @@ export default function MapScreen() {
   // ✅ Modal de info general de zonas
   const [showInfoModal, setShowInfoModal] = useState(false);
 
+
   const mapRef = useRef<MapView | null>(null);
   const [zonas, setZonas] = useState<Zona[]>(initialZones);
+
+  useEffect(() => {
+    pedirPermisosNotificaciones();
+  }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      await requestLocationPermission();
+      await loadCarLocation();
+    };
+    init();
+  }, []);
 
   // 👉 ARRAY DE INFO GENERAL PARA EL MODAL
   const zonasInfo = [
@@ -203,6 +219,20 @@ export default function MapScreen() {
     // 📍 Si está en una zona medida, abrir modal con info
     if (detectedZone) {
       setModalInfo({ visible: true, zone: detectedZone });
+
+      if (detectedZone.nombre.toLowerCase().includes("tribunales")) {
+        const ahora = new Date();
+        const horaNotificacion = new Date(ahora.getTime() + 5000); // 5 segundos después
+
+        if (ahora.getHours() < 23) {
+          programarNotificacion(
+            "⏰ Cortar SEM",
+            "Recordá cortar el SEM, el horario de pago termina a las 14:00.",
+            horaNotificacion
+          );
+        }
+      }
+
     } else {
       // 📍 Si NO está en zona, igual mostrar alerta de que estacionó en zona libre
       Alert.alert(
@@ -319,7 +349,9 @@ export default function MapScreen() {
         visible={showInfoModal}
         onClose={() => setShowInfoModal(false)}
         zonas={zonasInfo}
+        onOpenMap={() => Linking.openURL("https://ibb.co/jvyg3jV8")}
       />
+
 
       {/* ✅ MODAL DE ZONA DETECTADA */}
       {modalInfo.zone && (
@@ -337,12 +369,12 @@ export default function MapScreen() {
         descripcion={puntoLimiteData.descripcion}
         onClose={() => {
           setShowPuntoLimiteModal(false);
-          // Ejecutar la acción pendiente si existe
-          if (puntoLimiteData.pendingAction) {
-            puntoLimiteData.pendingAction();
-          }
+          if (puntoLimiteData.pendingAction) puntoLimiteData.pendingAction();
         }}
+        onOpenMap={() => Linking.openURL("https://ibb.co/jvyg3jV8")}
       />
+
+      
     </View>
   );
 }

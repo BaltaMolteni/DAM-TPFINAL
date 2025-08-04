@@ -36,6 +36,7 @@ export default function TestLocationButton({
             <Text style={styles.menuText}>📍 Zona Centro</Text>
           </TouchableOpacity>
 
+
           {/* Prohibido Estacionar */}
           <TouchableOpacity
             style={styles.menuItem}
@@ -56,6 +57,17 @@ export default function TestLocationButton({
             }}
           >
             <Text style={styles.menuText}>✅ Zona Libre</Text>
+          </TouchableOpacity>
+
+          {/* Zona Tribunales */}
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              onSelectLocation({ latitude: -34.917978, longitude: -57.959210 });
+              setOpen(false);
+            }}
+          >
+            <Text style={styles.menuText}>📍 Zona Tribunales</Text>
           </TouchableOpacity>
 
           {/* Zona Límite */}
