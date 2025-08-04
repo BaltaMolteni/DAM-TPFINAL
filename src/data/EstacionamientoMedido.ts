@@ -4,16 +4,16 @@ interface Point {
 }
 
 export interface Calle {
-  start: Point; 
-  end: Point; 
-  width: number; 
+  start: Point;
+  end: Point;
+  width: number;
 }
 
 export interface Rotonda {
-  centro: Point;         
-  radioExterior: number;   
-  anchoCalle: number;      
-  segments: number;        
+  centro: Point;
+  radioExterior: number;
+  anchoCalle: number;
+  segments: number;
 }
 
 export interface Zona {
@@ -311,11 +311,11 @@ export const zonasDeEstacionamiento: Zona[] = [
     rotondas: [
       {
         centro: { latitude: -34.871488, longitude: -58.046257 },
-        radioExterior: 69,    // metros desde el centro hasta el borde externo de la calle
-        anchoCalle: 7,        // ancho de la calle en metros
-        segments: 40          // suavidad del círculo
-      }
-    ]
+        radioExterior: 69, // metros desde el centro hasta el borde externo de la calle
+        anchoCalle: 7, // ancho de la calle en metros
+        segments: 40, // suavidad del círculo
+      },
+    ],
   },
 
   {
@@ -496,6 +496,204 @@ export const zonasDeEstacionamiento: Zona[] = [
         end: { latitude: -34.921364, longitude: -57.956858 },
         width: 7, // metros aprox. de la calle
       },
+
+      // Plaza Moreno
+      {
+        start: { latitude: -34.92111484123391, longitude: -57.9564650651009 },
+        end: { latitude: -34.92131057451939, longitude: -57.956438243012066 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92131057451939, longitude: -57.956438243012066 },
+        end: { latitude: -34.921427134568745, longitude: -57.956384598834404 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.921427134568745,
+          longitude: -57.956384598834404,
+        },
+        end: { latitude: -34.92150190885285, longitude: -57.95630681477678 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92150190885285, longitude: -57.95630681477678 },
+        end: { latitude: -34.921592077753886, longitude: -57.95618477427279 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.921592077753886, longitude: -57.95618477427279 },
+        end: { latitude: -34.92173282900804, longitude: -57.955925941115524 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92173282900804, longitude: -57.955925941115524 },
+        end: { latitude: -34.921764717933314, longitude: -57.95584279262196 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.921764717933314, longitude: -57.95584279262196 },
+        end: { latitude: -34.92184938846045, longitude: -57.95570331776001 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92184938846045, longitude: -57.95570331776001 },
+        end: { latitude: -34.921936258134245, longitude: -57.955606758228846 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.921936258134245,
+          longitude: -57.955606758228846,
+        },
+        end: { latitude: -34.92247293904877, longitude: -57.954946689027 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92247293904877, longitude: -57.954946689027 },
+        end: { latitude: -34.922543313950634, longitude: -57.95484878840274 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.922543313950634, longitude: -57.95484878840274 },
+        end: { latitude: -34.922640079342145, longitude: -57.95474284115184 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.922640079342145, longitude: -57.95474284115184 },
+        end: { latitude: -34.922676366337946, longitude: -57.954707972426704 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.922676366337946,
+          longitude: -57.954707972426704,
+        },
+        end: { latitude: -34.92283031097575, longitude: -57.95454838099813 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.92283031097575,
+          longitude: -57.95454838099813,
+        },
+        end: { latitude: -34.92283031097575, longitude: -57.95454972210257 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.92283031097575,
+          longitude: -57.95454972210257,
+        },
+        end: { latitude: -34.922881992325124, longitude: -57.95446120920942 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.922881992325124,
+          longitude: -57.95446120920942,
+        },
+        end: { latitude: -34.92292927523328, longitude: -57.9543418509141 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.92292927523328,
+          longitude: -57.9543418509141,
+        },
+        end: { latitude: -34.92294576926535, longitude: -57.95419164720466 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92294576926535, longitude: -57.95419164720466 },
+        end: { latitude: -34.92292597642809, longitude: -57.95408704104029 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92292597642809, longitude: -57.95408704104029 },
+        end: { latitude: -34.92286000026702, longitude: -57.95393147292504 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92286000026702, longitude: -57.95393147292504 },
+        end: { latitude: -34.92284480816079, longitude: -57.95394885961609 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92284480816079, longitude: -57.95394885961609 },
+        end: { latitude: -34.92241156330123, longitude: -57.95342582887304 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92241156330123, longitude: -57.95342582887304 },
+        end: { latitude: -34.9216550287132, longitude: -57.95262250727056 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.9216550287132, longitude: -57.95262250727056 },
+        end: { latitude: -34.92154946519034, longitude: -57.95255679314767 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92150987883606, longitude: -57.952507172283326 },
+        end: { latitude: -34.92143950304797, longitude: -57.95248839682114 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92143950304797, longitude: -57.95248839682114 },
+        end: { latitude: -34.92136472870699, longitude: -57.95248571461226 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.92136472870699, longitude: -57.95248571461226 },
+        end: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: { latitude: -34.921311946778225, longitude: -57.95250180786556 },
+        end: { latitude: -34.921326241881886, longitude: -57.952460233636145 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.921326241881886,
+          longitude: -57.952460233636145,
+        },
+        end: { latitude: -34.91972627380816, longitude: -57.95456710878424 },
+        width: 2, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91972627380816,
+          longitude: -57.95456710878424,
+        },
+        end: { latitude: -34.919772458886015, longitude: -57.954541627825336 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91972627380816,
+          longitude: -57.95456710878424,
+        },
+        end: { latitude: -34.91974716705869, longitude: -57.95472133582053 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91974716705869,
+          longitude: -57.95472133582053,
+        },
+        end: { latitude: -34.91974350382499, longitude: -57.95488060474875 },
+        width: 4, // metros aprox. de la calle
+      },
+      {
+        start: {
+          latitude: -34.91974350382499,
+          longitude: -57.95488060474875,
+        },
+        end: { latitude: -34.91977746291946, longitude: -57.955038303473025 },
+        width: 4, // metros aprox. de la calle
+      },
     ],
   },
 
@@ -665,17 +863,27 @@ export function generarPoligonoAnillo(rotonda: Rotonda) {
     const angle = (i / rotonda.segments) * 2 * Math.PI;
 
     coordsExterior.push({
-      latitude: rotonda.centro.latitude + Math.sin(angle) * rotonda.radioExterior * metroLat,
-      longitude: rotonda.centro.longitude + Math.cos(angle) * rotonda.radioExterior * metroLng,
+      latitude:
+        rotonda.centro.latitude +
+        Math.sin(angle) * rotonda.radioExterior * metroLat,
+      longitude:
+        rotonda.centro.longitude +
+        Math.cos(angle) * rotonda.radioExterior * metroLng,
     });
 
     coordsInterior.push({
-      latitude: rotonda.centro.latitude + Math.sin(angle) * (rotonda.radioExterior - rotonda.anchoCalle) * metroLat,
-      longitude: rotonda.centro.longitude + Math.cos(angle) * (rotonda.radioExterior - rotonda.anchoCalle) * metroLng,
+      latitude:
+        rotonda.centro.latitude +
+        Math.sin(angle) *
+          (rotonda.radioExterior - rotonda.anchoCalle) *
+          metroLat,
+      longitude:
+        rotonda.centro.longitude +
+        Math.cos(angle) *
+          (rotonda.radioExterior - rotonda.anchoCalle) *
+          metroLng,
     });
   }
 
   return { exterior: coordsExterior, interior: coordsInterior };
 }
-
-
