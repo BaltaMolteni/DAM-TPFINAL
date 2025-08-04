@@ -129,7 +129,7 @@ export default function TestLocationButton({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 230, // 🔽 Ajustar la posición en pantalla
+    top: 280, 
     right: 20,
     alignItems: "flex-end",
     zIndex: 10,

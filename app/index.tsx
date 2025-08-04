@@ -1,10 +1,5 @@
-import { FontAwesome, Fontisto } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Location from "expo-location";
-import inside from "point-in-polygon";
-import * as Linking from "expo-linking";  
-import React, { useEffect, useRef, useState } from "react";
-import {
+import React, { useEffect, useRef, useState } from 'react';
+import { 
   ActivityIndicator,
   Alert,
   Dimensions,
@@ -12,33 +7,45 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-} from "react-native";
+  View 
+} from 'react-native';
 import MapView, {
   Marker,
   Polygon,
+  Polyline,
   PROVIDER_GOOGLE,
-  Region,
-} from "react-native-maps";
+  Region
+} from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
+import inside from 'point-in-polygon';
+import * as Linking from 'expo-linking';
+import { FontAwesome, Fontisto } from '@expo/vector-icons';
 
-import DetectedZoneModal from "../src/components/DetectedZoneModal";
-import Header from "../src/components/Header";
-import InfoButton from "../src/components/InfoButton";
-import ParkingInfoModal from "../src/components/ParkingInfoModal";
-import PuntoLimiteModal from "../src/components/PuntoLimiteModal";
-import TestLocationButton from "../src/components/TestLocationButton";
-import { pedirPermisosNotificaciones, programarNotificacion } from "../src/utils/notifications";
-
+import DetectedZoneModal from '../src/components/DetectedZoneModal';
+import Header from '../src/components/Header';
+import InfoButton from '../src/components/InfoButton';
+import ParkingInfoModal from '../src/components/ParkingInfoModal';
+import PuntoLimiteModal from '../src/components/PuntoLimiteModal';
+import TestLocationButton from '../src/components/TestLocationButton';
 
 import {
-  generarPoligonoCalle, generarPoligonoAnillo,
+  pedirPermisosNotificaciones,
+  programarNotificacion
+} from '../src/utils/notifications';
+
+import {
+  generarPoligonoCalle,
+  generarPoligonoAnillo,
   zonasDeEstacionamiento as initialZones,
   Zona,
-} from "../src/data/EstacionamientoMedido";
+} from '../src/data/EstacionamientoMedido';
+
 import {
   puntosLimite,
   verificarProximidadPuntoLimite,
-} from "../src/data/PuntosLimite";
+} from '../src/data/PuntosLimite';
+
 
 const plazaMorenoLocation = {
   latitude: -34.92145,
@@ -57,6 +64,9 @@ export default function MapScreen() {
     latitude: number;
     longitude: number;
   } | null>(null);
+
+  // ✅ Estado para guardar las coordenadas de la ruta a dibujar
+  const [routeCoordinates, setRouteCoordinates] = useState<{latitude: number, longitude: number}[]>([]);
 
   // ✅ ubicación de prueba (si se selecciona desde el menú)
   const [testLocation, setTestLocation] = useState<{
@@ -175,6 +185,9 @@ export default function MapScreen() {
     // 🔄 usa ubicación de prueba si está activa, sino la del GPS
     const activeLocation = testLocation || userLocation;
     if (!activeLocation) return;
+    
+    // Si había una ruta dibujada, la oculta
+    if (routeCoordinates.length > 0) setRouteCoordinates([]);
 
     // 🚨 Verificar si está cerca de un punto límite
     const puntoLimiteCercano = verificarProximidadPuntoLimite(activeLocation);
@@ -248,8 +261,9 @@ export default function MapScreen() {
     }
   };
 
-  // ✅ Botón “volver a mi ubicación”
+  // ✅ Botón “volver a mi ubicación” (ahora también limpia la ruta)
   const goToMyLocation = () => {
+    if (routeCoordinates.length > 0) setRouteCoordinates([]); // Oculta la ruta si se está mostrando
     if (testLocation) {
       setTestLocation(null); // vuelve a GPS real si hay test activo
     } else if (userLocation) {
@@ -259,6 +273,58 @@ export default function MapScreen() {
       );
     }
   };
+
+  // 🗺️ FUNCIÓN ACTUALIZADA: Obtener y dibujar la ruta con OSRM (sin API Key)
+  const getDirectionsToCar = async () => {
+    // Si la ruta ya se está mostrando, la ocultamos y terminamos.
+    if (routeCoordinates.length > 0) {
+      setRouteCoordinates([]);
+      return;
+    }
+
+    if (!carLocation) {
+      Alert.alert("Auto no encontrado", "Primero debés estacionar tu auto para poder obtener la ruta.");
+      return;
+    }
+    if (!userLocation) {
+        Alert.alert("Ubicación no disponible", "No se puede obtener tu ubicación actual para trazar la ruta.");
+        return;
+    }
+
+    try {
+      const startCoords = `${userLocation.longitude},${userLocation.latitude}`;
+      const endCoords = `${carLocation.longitude},${carLocation.latitude}`;
+      
+      // URL del servidor público de OSRM. No requiere API Key.
+      const url = `http://router.project-osrm.org/route/v1/driving/${startCoords};${endCoords}?overview=full&geometries=geojson`;
+      
+      const response = await fetch(url);
+      const json = await response.json();
+
+      if (json.routes && json.routes.length > 0) {
+          const geometry = json.routes[0].geometry.coordinates;
+          // OSRM devuelve [longitude, latitude], lo mapeamos al formato que espera Polyline
+          const coords = geometry.map((point: number[]) => ({
+            latitude: point[1],
+            longitude: point[0],
+          }));
+
+          setRouteCoordinates(coords);
+          
+          // Ajustar el mapa para que se vea toda la ruta
+          mapRef.current?.fitToCoordinates(coords, {
+            edgePadding: { top: 100, right: 50, bottom: 100, left: 50 },
+            animated: true,
+          });
+      } else {
+          Alert.alert("Ruta no encontrada", "No se pudo calcular una ruta a la ubicación del auto. Código: " + json.code);
+      }
+    } catch (error) {
+        console.error(error);
+        Alert.alert("Error", "Ocurrió un error al obtener la ruta.");
+    }
+  };
+
 
   // ✅ Pantalla de carga si todavía no hay región
   if (!mapRegion) {
@@ -295,6 +361,11 @@ export default function MapScreen() {
         <Fontisto name="crosshairs" size={22} color="#333" />
       </TouchableOpacity>
 
+      {/* 🗺️ BOTÓN: Ruta al auto */}
+      <TouchableOpacity style={styles.directionsButton} onPress={getDirectionsToCar}>
+        <FontAwesome name="road" size={22} color="#333" />
+      </TouchableOpacity>
+
       {/* 🚗 Botón estacionar */}
       <TouchableOpacity style={styles.parkButton} onPress={estacionarVehiculo}>
         <FontAwesome name="car" size={24} color="white" />
@@ -316,26 +387,25 @@ export default function MapScreen() {
         pitchEnabled={false}
       >
         {zonas.map((zona) => (
-        <React.Fragment key={zona.nombre}>
-          {/* Calles */}
-          {zona.calles.map((calle, i) => {
-            const coords = generarPoligonoCalle(calle);
-            return (
-              <Polygon
-                key={`${zona.nombre}-calle-${i}`}
-                coordinates={coords}
-                fillColor={zona.color}
-                strokeWidth={0}
-              />
-            );
-          })}
-
-          {zona.rotondas &&
-            zona.rotondas.map((rotonda, j) => {
-              const { exterior, interior } = generarPoligonoAnillo(rotonda);
-
+          <React.Fragment key={zona.nombre}>
+            {/* Calles */}
+            {zona.calles.map((calle, i) => {
+              const coords = generarPoligonoCalle(calle);
               return (
-                <React.Fragment key={`${zona.nombre}-rotonda-${j}`}>
+                <Polygon
+                  key={`${zona.nombre}-calle-${i}`}
+                  coordinates={coords}
+                  fillColor={zona.color}
+                  strokeWidth={0}
+                />
+              );
+            })}
+
+            {/* Rotondas */}
+            {zona.rotondas &&
+              zona.rotondas.map((rotonda, j) => {
+                const { exterior, interior } = generarPoligonoAnillo(rotonda);
+                return (
                   <Polygon
                     key={`${zona.nombre}-rotonda-${j}`}
                     coordinates={exterior}
@@ -343,13 +413,18 @@ export default function MapScreen() {
                     fillColor={zona.color}
                     strokeWidth={0}
                   />
-                </React.Fragment>
-              );
-          })}
+                );
+            })}
+          </React.Fragment>
+        ))}
 
-        </React.Fragment>
-      ))}
-
+        {routeCoordinates.length > 0 && (
+            <Polyline
+                coordinates={routeCoordinates}
+                strokeColor="#3498db"
+                strokeWidth={6}
+            />
+        )}
 
         {/* ✅ Marker del usuario (test o real) */}
         {activeLocation && (
@@ -452,6 +527,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+
+  /* 🗺️ Botón de ruta al auto */
+  directionsButton: {
+    position: 'absolute',
+    top: 220, 
+    right: 20,
+    backgroundColor: 'white',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    zIndex: 1,
+    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
