@@ -37,16 +37,17 @@ export async function programarNotificacion(titulo: string, cuerpo: string, fech
     const diffEnSegundos = Math.max(1, Math.floor((fecha.getTime() - ahora.getTime()) / 1000));
 
         await Notifications.scheduleNotificationAsync({
-    content: {
-        title: titulo,
-        body: cuerpo,
-    },
-    trigger: {
-        type: "timeInterval" as any,
-        seconds: diffEnSegundos,
-        repeats: false,
-    },
-    });
+          content: {
+            title: titulo,
+            body: cuerpo,
+          },
+          trigger: {
+            type: "timeInterval" as any,
+            seconds: diffEnSegundos,
+            repeats: false,
+          },
+        });
+
 
 
     console.log("✅ Notificación programada para:", fecha);

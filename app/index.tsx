@@ -223,20 +223,21 @@ export default function MapScreen() {
 
     // 📍 Si está en una zona medida, abrir modal con info
     if (detectedZone) {
-      setModalInfo({ visible: true, zone: detectedZone });
+  setModalInfo({ visible: true, zone: detectedZone });
 
-      if (detectedZone.nombre.toLowerCase().includes("tribunales")) {
-        const ahora = new Date();
-        const horaNotificacion = new Date(ahora.getTime() + 5000); // 5 segundos después
+  if (detectedZone.nombre.toLowerCase().includes("tribunales")) {
+    const ahora = new Date();
+    const horaNotificacion = new Date(ahora.getTime() + 5000); // 5 segundos después
 
-        if (ahora.getHours() < 23) {
-          programarNotificacion(
-            "⏰ Cortar SEM",
-            "Recordá cortar el SEM, el horario de pago termina a las 14:00.",
-            horaNotificacion
-          );
-        }
-      }
+    //if (ahora.getHours() < 23) {
+      programarNotificacion(
+        "⏰ Cortar SEM",
+        "Recordá cortar el SEM, el horario de pago termina a las 14:00.",
+        horaNotificacion
+      );
+    //}
+  }
+
 
     } else {
       // 📍 Si NO está en zona, igual mostrar alerta de que estacionó en zona libre
