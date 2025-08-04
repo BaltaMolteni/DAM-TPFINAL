@@ -31,7 +31,7 @@ import { pedirPermisosNotificaciones, programarNotificacion } from "../src/utils
 
 
 import {
-  generarPoligonoCalle,
+  generarPoligonoCalle, generarPoligonoAnillo,
   zonasDeEstacionamiento as initialZones,
   Zona,
 } from "../src/data/EstacionamientoMedido";
@@ -315,20 +315,41 @@ export default function MapScreen() {
         mapType="standard"
         pitchEnabled={false}
       >
-        {/* Dibujar polígonos */}
-        {zonas.map((zona) =>
-          zona.calles.map((calle, i) => {
+        {zonas.map((zona) => (
+        <React.Fragment key={zona.nombre}>
+          {/* Calles */}
+          {zona.calles.map((calle, i) => {
             const coords = generarPoligonoCalle(calle);
             return (
               <Polygon
-                key={`${zona.nombre}-${i}`}
+                key={`${zona.nombre}-calle-${i}`}
                 coordinates={coords}
                 fillColor={zona.color}
                 strokeWidth={0}
               />
             );
-          })
-        )}
+          })}
+
+          {zona.rotondas &&
+            zona.rotondas.map((rotonda, j) => {
+              const { exterior, interior } = generarPoligonoAnillo(rotonda);
+
+              return (
+                <React.Fragment key={`${zona.nombre}-rotonda-${j}`}>
+                  <Polygon
+                    key={`${zona.nombre}-rotonda-${j}`}
+                    coordinates={exterior}
+                    holes={[interior]}
+                    fillColor={zona.color}
+                    strokeWidth={0}
+                  />
+                </React.Fragment>
+              );
+          })}
+
+        </React.Fragment>
+      ))}
+
 
         {/* ✅ Marker del usuario (test o real) */}
         {activeLocation && (

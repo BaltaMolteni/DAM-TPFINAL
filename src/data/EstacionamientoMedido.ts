@@ -4,9 +4,16 @@ interface Point {
 }
 
 export interface Calle {
-  start: Point; // inicio de la calle
-  end: Point; // fin de la calle
-  width: number; // ancho en metros
+  start: Point; 
+  end: Point; 
+  width: number; 
+}
+
+export interface Rotonda {
+  centro: Point;         
+  radioExterior: number;   
+  anchoCalle: number;      
+  segments: number;        
 }
 
 export interface Zona {
@@ -14,6 +21,7 @@ export interface Zona {
   color: string;
   horarios: string;
   calles: Calle[];
+  rotondas?: Rotonda[];
 }
 
 // 🚧 EJEMPLO INICIAL 🚧
@@ -300,6 +308,14 @@ export const zonasDeEstacionamiento: Zona[] = [
         width: 4,
       },
     ],
+    rotondas: [
+      {
+        centro: { latitude: -34.871488, longitude: -58.046257 },
+        radioExterior: 69,    // metros desde el centro hasta el borde externo de la calle
+        anchoCalle: 7,        // ancho de la calle en metros
+        segments: 40          // suavidad del círculo
+      }
+    ]
   },
 
   {
@@ -636,3 +652,30 @@ export function generarPoligonoCalle(
 
   return [p1, p2, p3, p4];
 }
+
+export function generarPoligonoAnillo(rotonda: Rotonda) {
+  const coordsExterior: Point[] = [];
+  const coordsInterior: Point[] = [];
+
+  const lat = rotonda.centro.latitude * (Math.PI / 180);
+  const metroLat = 1 / 111320;
+  const metroLng = 1 / (111320 * Math.cos(lat));
+
+  for (let i = 0; i <= rotonda.segments; i++) {
+    const angle = (i / rotonda.segments) * 2 * Math.PI;
+
+    coordsExterior.push({
+      latitude: rotonda.centro.latitude + Math.sin(angle) * rotonda.radioExterior * metroLat,
+      longitude: rotonda.centro.longitude + Math.cos(angle) * rotonda.radioExterior * metroLng,
+    });
+
+    coordsInterior.push({
+      latitude: rotonda.centro.latitude + Math.sin(angle) * (rotonda.radioExterior - rotonda.anchoCalle) * metroLat,
+      longitude: rotonda.centro.longitude + Math.cos(angle) * (rotonda.radioExterior - rotonda.anchoCalle) * metroLng,
+    });
+  }
+
+  return { exterior: coordsExterior, interior: coordsInterior };
+}
+
+
